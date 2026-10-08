@@ -1,0 +1,68 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-fondo: #0b0d12;
+  --color-superficie: #151922;
+  --color-superficie-2: #1d2330;
+  --color-borde: #262d3b;
+  --color-texto: #f2f4f8;
+  --color-tenue: #8b93a7;
+  --color-acento: #7c6cff;
+  --color-acento-fuerte: #6553f5;
+  --color-exito: #34d399;
+  --color-aviso: #fbbf24;
+  --color-peligro: #f87171;
+
+  --font-sans: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+
+  --radius-tarjeta: 1.25rem;
+
+  --animate-entrar: entrar 0.22s ease-out both;
+
+  @keyframes entrar {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+html,
+body,
+#raiz {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--color-fondo);
+  color: var(--color-texto);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior-y: none;
+  /* Se siente como app: sin selección de texto accidental ni menú al mantener pulsado. */
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+input,
+textarea,
+select {
+  -webkit-user-select: text;
+  user-select: text;
+  /* 16px evita que iOS haga zoom al enfocar un campo. */
+  font-size: 16px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
