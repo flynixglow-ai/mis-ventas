@@ -5,7 +5,7 @@
 > negocio, las decisiones tomadas y el estado actual.
 
 **Última actualización:** 2026-10-07
-**Versión:** 0.5.0 (Etapas 0 a 3 y 6 terminadas)
+**Versión:** 0.6.0 (Etapas 0 a 4 y 6 terminadas)
 
 ---
 
@@ -17,8 +17,8 @@
 | 1 | Dominio completo con pruebas (sin pantallas) | **Terminada** |
 | 2 | Marcas, campañas y clientes | **Terminada** |
 | 3 | Nuevo pedido, detalle del pedido y abonos | **Terminada** |
-| 4 | Dashboard, filtros y búsqueda | **Siguiente** |
-| 5 | Reportes, detalle de campaña, historial y WhatsApp | Pendiente |
+| 4 | Dashboard, filtros y búsqueda | **Terminada** |
+| 5 | Reportes, detalle de campaña, historial y WhatsApp | **Siguiente** |
 | 6 | Copia de seguridad, restauración y CSV | **Terminada** (se adelantó) |
 | 7 | Pulido offline, prueba en iPhone, versión 1.0 | Pendiente |
 
@@ -107,9 +107,24 @@ los datos era lo más urgente antes de usar la app con datos reales.
 - 17 pruebas de respaldo y 4 flujos, incluido restaurar en una instalación
   vacía ("otro teléfono").
 
-**Todavía no existe:** filtros y búsqueda en Pedidos, dashboard completo,
-reportes, detalle de campaña, historial y WhatsApp (etapas 4 y 5). La lógica
-de todo eso ya está en el dominio; faltan las pantallas.
+**Funciones implementadas (Etapa 4): dashboard, filtros y búsqueda.**
+
+- **Inicio:** total por cobrar; clientes con saldo, pedidos pendientes y
+  pedidos pagados; este mes (vendido, cobrado, pendiente); hasta 5 clientes
+  con mayor saldo; hasta 5 pendientes recientes. Todo enlaza al cliente o al
+  pedido.
+- **Pedidos:** buscador (cliente, producto, marca, campaña, `#número`);
+  botones de estado (Todas, Pendientes, Pago parcial, Vencidas, Pagadas);
+  hoja de filtros (marca, campaña de esa marca, cliente, desde, hasta); y un
+  resumen de la lista filtrada (cantidad, vendido, pendiente). Así se responde
+  "cuánto me deben de Ésika — Campaña 10".
+- Los filtros se guardan en la dirección (`/pedidos?marca=…&campana=…`), por
+  eso se conservan al abrir un pedido y volver.
+- 5 flujos nuevos. Las pruebas de flujos cargan un escenario común con
+  "Restaurar copia" (`e2e/escenario.ts`).
+
+**Todavía no existe (Etapa 5):** reportes, detalle de campaña, historial y
+WhatsApp. La lógica ya está en el dominio; faltan las pantallas.
 
 **Publicación (hecha el 2026-10-08):**
 

@@ -2,6 +2,16 @@
 
 Todos los cambios importantes del proyecto se registran aquí.
 
+## [0.6.0] — 2026-10-08 — Etapa 4: dashboard, filtros y búsqueda
+
+### Agregado
+- Inicio completo: contadores, resumen del mes, clientes con mayor saldo y
+  pendientes recientes.
+- Pedidos: búsqueda, filtros por estado, marca, campaña, cliente y fechas, y
+  resumen de vendido y pendiente de la lista filtrada.
+- Los filtros se conservan al abrir un pedido y volver.
+- 5 pruebas de flujos.
+
 ## [0.5.0] — 2026-10-08 — Etapa 6 (adelantada): copia de seguridad
 
 ### Agregado
