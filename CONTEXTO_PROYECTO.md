@@ -146,7 +146,6 @@ de todo eso ya está en el dominio; faltan las pantallas.
 
 **Pendientes fuera del código:**
 
-- Hosting con HTTPS para instalar en el iPhone (sección 13).
 - Prueba en un iPhone real: hasta ahora solo se probó en Chrome con el tamaño
   de un iPhone 12 Pro Max.
 
@@ -215,7 +214,7 @@ Abono $100.000 → saldo $0       → PAGADO
 | Estilos | Tailwind CSS | Tema oscuro y diseño móvil consistente |
 | PWA | vite-plugin-pwa (Workbox) | Instalación y modo offline |
 | Pruebas | Vitest + fake-indexeddb; Playwright | Lógica y datos; flujos completos y offline |
-| Versiones | Git (repositorio privado en GitHub) | Continuar desde otro computador |
+| Versiones | Git (repositorio público en GitHub) | Continuar desde otro computador |
 
 Sin backend, sin login, sin base de datos online. Los datos del negocio viven
 únicamente en el teléfono.
