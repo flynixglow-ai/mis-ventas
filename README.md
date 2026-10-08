@@ -9,9 +9,9 @@ Funciona sin internet y guarda los datos en el propio teléfono.
 
 ## Estado
 
-Versión 0.6.0 — Funciona: marcas, campañas, clientes, pedidos con varios
-productos, abonos, dashboard, filtros, búsqueda y copia de seguridad. Faltan
-reportes, detalle de campaña, historial y WhatsApp. Ver [CONTEXTO_PROYECTO.md](CONTEXTO_PROYECTO.md) para el estado detallado.
+Versión 0.9.0 — Todas las funciones de la V1 están implementadas: marcas,
+campañas, clientes, pedidos con varios productos, abonos, dashboard, filtros,
+búsqueda, reportes, historial, WhatsApp y copia de seguridad. Ver [CONTEXTO_PROYECTO.md](CONTEXTO_PROYECTO.md) para el estado detallado.
 
 ## Documentación
 

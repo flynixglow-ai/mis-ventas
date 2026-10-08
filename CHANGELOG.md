@@ -2,6 +2,23 @@
 
 Todos los cambios importantes del proyecto se registran aquí.
 
+## [0.9.0] — 2026-10-08 — Etapa 5: reportes, campaña, historial y WhatsApp
+
+### Agregado
+- Reportes por todo el negocio, marca, campaña, cliente y mes.
+- Detalle de campaña con totales, conteos, clientes y pedidos.
+- Historial de ventas, abonos y ventas pagadas.
+- Resumen de pedidos pendientes para enviar por WhatsApp, con vista previa.
+- Ajustes: indicativo de país, versión y estado de protección de los datos.
+- 3 pruebas de ajustes y 4 pruebas de flujos.
+
+### Cambiado
+- Tocar una campaña abre su detalle; se edita desde ahí.
+
+### Notas
+- Todas las funciones de la V1 están implementadas. La 1.0 se publicará tras
+  el pulido con el uso real.
+
 ## [0.6.0] — 2026-10-08 — Etapa 4: dashboard, filtros y búsqueda
 
 ### Agregado

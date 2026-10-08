@@ -3,7 +3,10 @@ import { Link } from 'react-router-dom'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { db } from '../datos/db'
 import { crearCampana, editarCampana, eliminarCampana } from '../datos/repositorios/campanas'
+import { cargarVistas } from '../datos/repositorios/consultas'
 import { formatearFecha } from '../dominio/fechas'
+import { formatearPesos } from '../dominio/formato'
+import { agrupar } from '../dominio/reportes'
 import type { Campana, Marca } from '../dominio/tipos'
 import { Boton } from '../ui/Boton'
 import { Campo, ErrorGeneral, Insignia, claseArea, claseEntrada, mensajeDe } from '../ui/Campo'
@@ -19,7 +22,8 @@ function fechasDe(c: Campana): string | undefined {
 }
 
 export function Campanas() {
-  const [hoja, setHoja] = useState<Campana | 'nueva' | null>(null)
+  const [creando, setCreando] = useState(false)
+  const totales = useLiveQuery(async () => agrupar(await cargarVistas(), (v) => v.pedido.campanaId), [])
   const datos = useLiveQuery(async () => {
     const [marcas, campanas] = await Promise.all([db.marcas.toArray(), db.campanas.toArray()])
     marcas.sort((a, b) => a.nombre.localeCompare(b.nombre, 'es'))
@@ -40,7 +44,7 @@ export function Campanas() {
       volverA="/mas"
       accion={
         marcas.length > 0 && (
-          <Boton variante="compacto" onClick={() => setHoja('nueva')}>
+          <Boton variante="compacto" onClick={() => setCreando(true)}>
             Nueva
           </Boton>
         )
@@ -64,16 +68,23 @@ export function Campanas() {
               {!marca.activa && <Insignia>Inactiva</Insignia>}
             </h2>
             <Lista etiqueta={`Campañas de ${marca.nombre}`}>
-              {lista.map((c) => (
-                <Fila key={c.id} titulo={c.nombre} detalle={fechasDe(c)} alTocar={() => setHoja(c)} />
-              ))}
+              {lista.map((c) => {
+                const pendiente = totales?.get(c.id)?.pendiente ?? 0
+                return (
+                  <Fila
+                    key={c.id}
+                    titulo={c.nombre}
+                    detalle={fechasDe(c)}
+                    extra={pendiente > 0 && <span className="shrink-0 font-semibold text-aviso">{formatearPesos(pendiente)}</span>}
+                    a={`/mas/campanas/${c.id}`}
+                  />
+                )
+              })}
             </Lista>
           </section>
         ))}
       </div>
-      {hoja && (
-        <FormularioCampana campana={hoja === 'nueva' ? undefined : hoja} marcas={marcas} alCerrar={() => setHoja(null)} />
-      )}
+      {creando && <FormularioCampana marcas={marcas} alCerrar={() => setCreando(false)} />}
     </Pantalla>
   )
 }
@@ -84,7 +95,7 @@ interface PropsFormulario {
   alCerrar: () => void
 }
 
-function FormularioCampana({ campana, marcas, alCerrar }: PropsFormulario) {
+export function FormularioCampana({ campana, marcas, alCerrar }: PropsFormulario) {
   const elegibles = marcas.filter((m) => m.activa)
   const [marcaId, setMarcaId] = useState(campana?.marcaId ?? (elegibles.length === 1 ? elegibles[0].id : ''))
   const [nombre, setNombre] = useState(campana?.nombre ?? '')

@@ -108,13 +108,21 @@ test('campaña: no se puede crear sin marca y se puede editar y eliminar', async
   await nueva.getByLabel('Cierre').fill('2026-10-21')
   await nueva.getByRole('button', { name: 'Guardar' }).click()
 
-  const fila = page.getByRole('button', { name: /Campaña 10/ })
+  // La campaña se abre en su propia pantalla, y desde ahí se edita.
+  const fila = page.getByRole('link', { name: /Campaña 10/ })
   await expect(fila).toContainText('01/10/2026 – 21/10/2026')
   await fila.click()
+  await expect(page.getByRole('heading', { name: 'Campaña 10' })).toBeVisible()
+  await expect(page.getByLabel('Marca de la campaña')).toHaveText('Ésika')
+  await expect(page.getByText('Aún no hay ventas registradas en esta campaña.')).toBeVisible()
+
+  await page.getByRole('button', { name: 'Editar campaña' }).click()
   const editar = page.getByRole('dialog', { name: 'Editar campaña' })
   await editar.getByLabel('Nombre o número').fill('Campaña 11')
   await editar.getByRole('button', { name: 'Guardar' }).click()
-  await page.getByRole('button', { name: /Campaña 11/ }).click()
+  await expect(page.getByRole('heading', { name: 'Campaña 11' })).toBeVisible()
+
+  await page.getByRole('button', { name: 'Editar campaña' }).click()
   await editar.getByRole('button', { name: 'Eliminar campaña' }).click()
   await page.getByRole('alertdialog').getByRole('button', { name: 'Eliminar' }).click()
   await expect(page.getByText('Sin campañas')).toBeVisible()

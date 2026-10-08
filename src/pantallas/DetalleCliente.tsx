@@ -3,7 +3,10 @@ import { Link, Navigate, useNavigate, useParams } from 'react-router-dom'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { db } from '../datos/db'
 import { cambiarEstadoCliente, eliminarCliente } from '../datos/repositorios/clientes'
+import { leerIndicativo } from '../datos/repositorios/ajustes'
 import { cargarVistas } from '../datos/repositorios/consultas'
+import { enlaceWhatsApp, mensajeResumenCliente } from '../dominio/whatsapp'
+import { Hoja } from '../ui/Hoja'
 import { filtrarPedidos } from '../dominio/busqueda'
 import { hoy } from '../dominio/fechas'
 import { formatearPesos } from '../dominio/formato'
@@ -21,12 +24,14 @@ export function DetalleCliente() {
   const navegar = useNavigate()
   const [editando, setEditando] = useState(false)
   const [confirmando, setConfirmando] = useState<'archivar' | 'eliminar' | null>(null)
+  const [compartiendo, setCompartiendo] = useState(false)
   const { errores, enviar } = useEnvio()
 
   const datos = useLiveQuery(
     async () => ({
       cliente: await db.clientes.get(id),
       pedidos: (await cargarVistas()).filter((v) => v.pedido.clienteId === id),
+      indicativo: await leerIndicativo(),
     }),
     [id],
   )
@@ -38,6 +43,8 @@ export function DetalleCliente() {
   const pedidos = filtrarPedidos(datos.pedidos, {}, fecha)
   const totales = calcularTotales(pedidos)
   const archivado = cliente.estado === 'archivado'
+  // Solo hay mensaje si el cliente tiene saldo pendiente.
+  const mensaje = mensajeResumenCliente(cliente, pedidos)
 
   return (
     <Pantalla titulo={cliente.nombre} volverA="/clientes">
@@ -96,10 +103,21 @@ export function DetalleCliente() {
         )}
 
         <div className="space-y-3 pt-2">
+          {mensaje && (
+            <button
+              type="button"
+              onClick={() => setCompartiendo(true)}
+              className="h-13 w-full rounded-2xl bg-exito font-semibold text-fondo transition-transform active:scale-[0.98]"
+            >
+              Enviar resumen por WhatsApp
+            </button>
+          )}
           {!archivado && (
             <Link
               to={`/pedidos/nuevo?cliente=${cliente.id}`}
-              className="flex h-13 w-full items-center justify-center rounded-2xl bg-acento font-semibold text-white"
+              className={`flex h-13 w-full items-center justify-center rounded-2xl font-semibold ${
+                mensaje ? 'border border-borde bg-superficie-2' : 'bg-acento text-white'
+              }`}
             >
               + Nuevo pedido para {cliente.nombre.split(' ')[0]}
             </Link>
@@ -125,6 +143,14 @@ export function DetalleCliente() {
       </div>
 
       {editando && <FormularioCliente cliente={cliente} alCerrar={() => setEditando(false)} />}
+      {compartiendo && mensaje && (
+        <HojaWhatsApp
+          mensaje={mensaje}
+          telefono={cliente.telefono}
+          indicativo={datos.indicativo}
+          alCerrar={() => setCompartiendo(false)}
+        />
+      )}
       {confirmando === 'archivar' && (
         <Confirmar
           titulo={`¿Archivar a ${cliente.nombre}?`}
@@ -154,5 +180,53 @@ export function DetalleCliente() {
         />
       )}
     </Pantalla>
+  )
+}
+
+interface PropsWhatsApp {
+  mensaje: string
+  telefono: string
+  indicativo: string
+  alCerrar: () => void
+}
+
+/** Muestra el mensaje antes de enviarlo: nada sale del teléfono sin que se vea primero. */
+function HojaWhatsApp({ mensaje, telefono, indicativo, alCerrar }: PropsWhatsApp) {
+  const [copiado, setCopiado] = useState(false)
+
+  async function copiar() {
+    try {
+      await navigator.clipboard.writeText(mensaje)
+      setCopiado(true)
+    } catch {
+      setCopiado(false)
+    }
+  }
+
+  return (
+    <Hoja titulo="Resumen para WhatsApp" alCerrar={alCerrar}>
+      <div className="space-y-4">
+        <p
+          aria-label="Mensaje"
+          className="max-h-[45dvh] select-text overflow-y-auto whitespace-pre-wrap rounded-2xl bg-superficie-2 px-4 py-3 text-sm"
+        >
+          {mensaje}
+        </p>
+        {!telefono.trim() && (
+          <p className="text-sm text-tenue">Este cliente no tiene teléfono guardado: WhatsApp te dejará elegir el contacto.</p>
+        )}
+        <a
+          href={enlaceWhatsApp(telefono, mensaje, indicativo)}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex h-13 w-full items-center justify-center rounded-2xl bg-exito font-semibold text-fondo"
+        >
+          Abrir WhatsApp
+        </a>
+        <Boton variante="secundario" onClick={copiar}>
+          {copiado ? 'Mensaje copiado' : 'Copiar mensaje'}
+        </Boton>
+      </div>
+    </Hoja>
   )
 }

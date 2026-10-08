@@ -5,7 +5,7 @@
 > negocio, las decisiones tomadas y el estado actual.
 
 **Última actualización:** 2026-10-07
-**Versión:** 0.6.0 (Etapas 0 a 4 y 6 terminadas)
+**Versión:** 0.9.0 (Etapas 0 a 6 terminadas: todas las funciones de la V1)
 
 ---
 
@@ -18,9 +18,9 @@
 | 2 | Marcas, campañas y clientes | **Terminada** |
 | 3 | Nuevo pedido, detalle del pedido y abonos | **Terminada** |
 | 4 | Dashboard, filtros y búsqueda | **Terminada** |
-| 5 | Reportes, detalle de campaña, historial y WhatsApp | **Siguiente** |
+| 5 | Reportes, detalle de campaña, historial y WhatsApp | **Terminada** |
 | 6 | Copia de seguridad, restauración y CSV | **Terminada** (se adelantó) |
-| 7 | Pulido offline, prueba en iPhone, versión 1.0 | Pendiente |
+| 7 | Pulido con el uso real en iPhone, versión 1.0 | **Siguiente** |
 
 **Funciones implementadas (Etapa 0):**
 
@@ -123,8 +123,25 @@ los datos era lo más urgente antes de usar la app con datos reales.
 - 5 flujos nuevos. Las pruebas de flujos cargan un escenario común con
   "Restaurar copia" (`e2e/escenario.ts`).
 
-**Todavía no existe (Etapa 5):** reportes, detalle de campaña, historial y
-WhatsApp. La lógica ya está en el dominio; faltan las pantallas.
+**Funciones implementadas (Etapa 5): reportes, campaña, historial, WhatsApp.**
+
+- **Más → Reportes:** vendido, cobrado y pendiente de todo el negocio, y por
+  marca, campaña, cliente o mes. Cada fila lleva a su detalle (la marca y el
+  mes abren Pedidos ya filtrado). La pestaña elegida va en `?por=`.
+- **Detalle de campaña** (`/mas/campanas/:id`): marca, total pendiente,
+  vendido/cobrado/pendiente, conteos (clientes, pedidos, pendientes, pagados),
+  clientes de la campaña con su saldo en ella, y sus pedidos. Desde ahí se
+  edita la campaña. La lista de campañas muestra el pendiente de cada una.
+- **Más → Historial:** venta registrada, abono recibido y venta pagada,
+  agrupados por día, de lo más reciente a lo más antiguo, de 60 en 60.
+- **WhatsApp** (detalle del cliente, solo si tiene saldo): muestra el mensaje
+  antes de enviarlo, con "Abrir WhatsApp" y "Copiar mensaje".
+- **Más → Ajustes:** indicativo de país para WhatsApp (57 por defecto),
+  versión de la app y si el navegador protege los datos.
+- 3 pruebas de ajustes y 4 flujos nuevos.
+
+**Con esto están todas las funciones previstas para la V1.** Queda la Etapa 7:
+ajustes que salgan del uso real en el iPhone y publicar la versión 1.0.
 
 **Publicación (hecha el 2026-10-08):**
 
