@@ -7,8 +7,9 @@ Funciona sin internet y guarda los datos en el propio teléfono.
 
 ## Estado
 
-Versión 0.1.0 — Etapa 0 terminada: base del proyecto, navegación, base de
-datos y PWA. Las funciones del negocio empiezan en la Etapa 1. Ver [CONTEXTO_PROYECTO.md](CONTEXTO_PROYECTO.md) para el estado detallado.
+Versión 0.2.0 — Etapas 0 y 1 terminadas: base del proyecto, navegación, base
+de datos, PWA y toda la lógica del negocio con pruebas. Las pantallas con
+datos empiezan en la Etapa 2. Ver [CONTEXTO_PROYECTO.md](CONTEXTO_PROYECTO.md) para el estado detallado.
 
 ## Documentación
 

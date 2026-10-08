@@ -77,6 +77,20 @@ export interface Abono {
   creadoEn: FechaHora
 }
 
+/** Un pedido con sus productos y abonos: lo mínimo para calcular. */
+export interface PedidoDetallado {
+  pedido: Pedido
+  items: Item[]
+  abonos: Abono[]
+}
+
+/** Un pedido con todo lo necesario para mostrarlo y buscarlo. */
+export interface PedidoVista extends PedidoDetallado {
+  cliente: Cliente
+  marca: Marca
+  campana: Campana
+}
+
 export interface Meta {
   clave: string
   valor: string | number

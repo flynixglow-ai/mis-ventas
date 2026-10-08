@@ -5,7 +5,7 @@
 > negocio, las decisiones tomadas y el estado actual.
 
 **Última actualización:** 2026-10-07
-**Versión:** 0.1.0 (Etapa 0 terminada)
+**Versión:** 0.2.0 (Etapas 0 y 1 terminadas)
 
 ---
 
@@ -14,8 +14,8 @@
 | Etapa | Contenido | Estado |
 |---|---|---|
 | 0 | Proyecto base, documentación, tema visual, base de datos, PWA mínima | **Terminada** |
-| 1 | Dominio completo con pruebas (sin pantallas) | **Siguiente** |
-| 2 | Marcas, campañas y clientes | Pendiente |
+| 1 | Dominio completo con pruebas (sin pantallas) | **Terminada** |
+| 2 | Marcas, campañas y clientes | **Siguiente** |
 | 3 | Nuevo pedido, detalle del pedido y abonos | Pendiente |
 | 4 | Dashboard, filtros y búsqueda | Pendiente |
 | 5 | Reportes, detalle de campaña, historial y WhatsApp | Pendiente |
@@ -34,13 +34,30 @@
 - PWA: manifiesto, íconos y service worker; la app carga sin conexión.
 - 5 pruebas de datos (Vitest) y 5 de flujos (Playwright), todas en verde.
 
-**Todavía no existe:** cálculos, validaciones, repositorios, formularios, ni
-ninguna función del negocio. Eso empieza en la Etapa 1.
+**Funciones implementadas (Etapa 1): toda la lógica del negocio, sin pantallas.**
+
+| Archivo en `src/dominio` | Qué resuelve |
+|---|---|
+| `formato.ts` | Pesos (`$270.000`), lectura de campos de dinero, número `#0025`, normalizar texto |
+| `fechas.ts` | Validar fechas, fecha de hoy, formato `07/10/2026`, mes |
+| `calculos.ts` | Subtotal, total, abonado, saldo y `resumirPedido` |
+| `estados.ts` | Pendiente / pago parcial / pagado, vencido, campaña cerrada |
+| `validaciones.ts` | Marca, campaña, cliente, producto, abono, pedido nuevo y pedido editado |
+| `reportes.ts` | Totales generales y por marca, campaña, cliente o mes; mayores saldos; pendientes recientes |
+| `historial.ts` | Movimientos derivados: venta, abono, venta pagada |
+| `busqueda.ts` | Filtros y búsqueda de pedidos y clientes |
+| `whatsapp.ts` | Mensaje de resumen y enlace `wa.me` |
+
+72 pruebas de dominio en verde. El escenario compartido por las pruebas está
+en `src/dominio/datosDePrueba.ts` (4 pedidos, 2 clientes, 2 marcas).
+
+**Todavía no existe:** repositorios (guardar y leer), formularios ni pantallas
+con datos. Nada de la Etapa 1 es visible aún en la app. Eso empieza en la
+Etapa 2.
 
 **Pendientes fuera del código:**
 
-- Primer commit de Git: falta configurar nombre y correo (`git config`).
-- Repositorio privado en GitHub.
+- Repositorio privado en GitHub (Git local ya tiene commits).
 - Hosting con HTTPS para instalar en el iPhone (sección 13).
 - Prueba en un iPhone real: hasta ahora solo se probó en Chrome con el tamaño
   de un iPhone 12 Pro Max.
@@ -152,7 +169,7 @@ mis-ventas/
 ├─ src/
 │  ├─ dominio/
 │  │  ├─ tipos.ts          entidades
-│  │  ├─ dinero.ts         formato y lectura de pesos
+│  │  ├─ formato.ts        pesos, número de pedido, normalizar texto
 │  │  ├─ fechas.ts         fechas AAAA-MM-DD
 │  │  ├─ calculos.ts       subtotal, total, abonado, saldo
 │  │  ├─ estados.ts        estado de pago y vencimiento
@@ -281,6 +298,19 @@ pedido. Siempre se calculan.
 ### Número de pedido
 Contador global en `meta`. Se incrementa en la misma transacción que crea el
 pedido. Eliminar un pedido no devuelve su número. Se muestra como `#0001`.
+
+### Convenciones del dominio
+- Las validaciones devuelven una lista de `{ campo, mensaje }`; lista vacía
+  significa válido. La interfaz muestra el mensaje junto al campo.
+- Las funciones que dependen de la fecha reciben `hoy` como parámetro, para
+  poder probarlas.
+- Los reportes reciben `PedidoDetallado` (pedido + items + abonos); la búsqueda
+  y WhatsApp reciben `PedidoVista` (además cliente, marca y campaña).
+- "Pedidos pendientes" en totales = pedidos con saldo mayor que 0 (incluye los
+  de pago parcial). El filtro "Pendientes" de la lista = sin ningún abono.
+- El mensaje de WhatsApp agrupa por marca y campaña: dos pedidos del mismo
+  cliente en la misma campaña se suman en un solo bloque.
+- Un pedido de total $0 se considera pagado.
 
 ### Validaciones (todas en `src/dominio/validaciones.ts`, con pruebas)
 - Pedido: requiere cliente, marca, campaña y al menos un producto. La campaña
@@ -483,8 +513,10 @@ Requisitos: Git, Node.js LTS y Google Chrome (para las pruebas de flujos).
 Para continuar con Claude: abrir la carpeta del proyecto, iniciar una
 conversación y pedirle que lea `CONTEXTO_PROYECTO.md` antes de hacer nada.
 
-**Pendiente:** crear el repositorio privado en GitHub y hacer el primer commit
-(Git aún no tiene nombre ni correo configurados en el computador inicial).
+**Pendiente:** crear el repositorio privado en GitHub y subir el proyecto.
+Git está configurado solo dentro de este proyecto (correo
+flynixglow@gmail.com); en otro computador hay que repetir `git config
+user.name` y `git config user.email`.
 
 **Ubicación en el computador inicial:** `C:\Proyectos\mis-ventas`. Está fuera
 de OneDrive a propósito: OneDrive sincroniza mal las miles de dependencias de
