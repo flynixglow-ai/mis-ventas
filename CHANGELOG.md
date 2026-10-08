@@ -13,6 +13,9 @@ Todos los cambios importantes del proyecto se registran aquí.
 - Guía de cambio de teléfono en la pantalla y en `CONTEXTO_PROYECTO.md`.
 - 17 pruebas de respaldo y 4 pruebas de flujos.
 
+- Publicación automática en GitHub Pages:
+  https://flynixglow-ai.github.io/mis-ventas/
+
 ### Notas
 - Se adelantó a las etapas 4 y 5 para poder usar la app con datos reales.
 

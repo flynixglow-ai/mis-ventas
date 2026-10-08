@@ -5,6 +5,8 @@ por catálogo: marcas, campañas, clientes, pedidos, abonos y saldos pendientes.
 
 Funciona sin internet y guarda los datos en el propio teléfono.
 
+**Abrir la app:** https://flynixglow-ai.github.io/mis-ventas/
+
 ## Estado
 
 Versión 0.5.0 — Funciona: marcas, campañas, clientes, pedidos con varios

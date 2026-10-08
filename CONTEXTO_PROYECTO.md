@@ -111,9 +111,15 @@ los datos era lo más urgente antes de usar la app con datos reales.
 reportes, detalle de campaña, historial y WhatsApp (etapas 4 y 5). La lógica
 de todo eso ya está en el dominio; faltan las pantallas.
 
-**Pendiente crítico: hosting con HTTPS.** Sin él la app no se puede instalar
-en el iPhone. Requiere una cuenta de GitHub o Cloudflare de la persona dueña
-del proyecto (ver sección 13).
+**Publicación (hecha el 2026-10-08):**
+
+- App: https://flynixglow-ai.github.io/mis-ventas/
+- Código: https://github.com/flynixglow-ai/mis-ventas (repositorio público)
+- Cada `git push` a `main` ejecuta las pruebas y publica solo
+  (`.github/workflows/publicar.yml`). Tarda unos 2 minutos.
+- Verificado en la dirección pública con Chrome en tamaño iPhone: carga,
+  manifiesto e íconos correctos, service worker activo, y guarda datos sin
+  conexión. **Falta la prueba en un iPhone real.**
 
 **Notas técnicas para quien continúe:**
 
@@ -140,7 +146,6 @@ del proyecto (ver sección 13).
 
 **Pendientes fuera del código:**
 
-- Repositorio privado en GitHub (Git local ya tiene commits).
 - Hosting con HTTPS para instalar en el iPhone (sección 13).
 - Prueba en un iPhone real: hasta ahora solo se probó en Chrome con el tamaño
   de un iPhone 12 Pro Max.
@@ -615,14 +620,34 @@ misma WiFi, `npm run dev -- --host`, y abrir en Safari la dirección de red que
 muestra la terminal. Sirve para diseño y flujos; no permite instalar ni probar
 offline, porque eso exige HTTPS.
 
-**Publicación:** la carpeta `dist/` se sube a un hosting estático gratuito con
-HTTPS (Cloudflare Pages o GitHub Pages). El hosting solo entrega los archivos
-de la app; los datos nunca salen del teléfono. Pendiente de configurar.
+**Publicación:** GitHub Pages. Para publicar una versión nueva basta con:
 
-**Instalar en iPhone:** abrir la dirección en Safari → Compartir → "Agregar a
-pantalla de inicio".
+```
+git add -A
+git commit -m "Descripción del cambio"
+git push
+```
 
-**Instalar en Android:** abrir la dirección en Chrome → menú → "Instalar app".
+GitHub ejecuta `npm test` y `npm run build` y publica `dist/`. Si una prueba
+falla, no se publica. El avance se ve en la pestaña Actions del repositorio
+o con `gh run watch`. El hosting solo entrega los archivos de la app; los
+datos nunca salen del teléfono.
+
+**Instalar en iPhone**
+
+1. Abrir https://flynixglow-ai.github.io/mis-ventas/ en **Safari** (no en
+   Chrome ni desde WhatsApp).
+2. Tocar el botón Compartir (cuadro con flecha hacia arriba).
+3. Elegir **Agregar a pantalla de inicio** → **Agregar**.
+4. Abrir Mis Ventas desde el ícono. Usarla siempre desde ahí: la app
+   instalada y la pestaña de Safari guardan datos por separado.
+
+**Instalar en Android:** abrir la misma dirección en Chrome → menú ⋮ →
+**Instalar app** (o "Agregar a pantalla principal").
+
+**Actualizaciones:** la app instalada se actualiza sola al abrirla con
+internet; si no se ve el cambio, cerrarla y volver a abrirla. Actualizar no
+borra los datos.
 
 ---
 
@@ -630,7 +655,7 @@ pantalla de inicio".
 
 Requisitos: Git, Node.js LTS y Google Chrome (para las pruebas de flujos).
 
-1. Clonar el repositorio (o copiar la carpeta `mis-ventas`).
+1. `git clone https://github.com/flynixglow-ai/mis-ventas.git`
 2. `npm install`
 3. `npm run dev`
 4. Leer este archivo y `CHANGELOG.md`.
@@ -638,10 +663,11 @@ Requisitos: Git, Node.js LTS y Google Chrome (para las pruebas de flujos).
 Para continuar con Claude: abrir la carpeta del proyecto, iniciar una
 conversación y pedirle que lea `CONTEXTO_PROYECTO.md` antes de hacer nada.
 
-**Pendiente:** crear el repositorio privado en GitHub y subir el proyecto.
-Git está configurado solo dentro de este proyecto (correo
-flynixglow@gmail.com); en otro computador hay que repetir `git config
-user.name` y `git config user.email`.
+Para subir cambios desde otro computador: instalar GitHub CLI, ejecutar
+`gh auth login --web --scopes workflow` (cuenta `flynixglow-ai`) y configurar
+`git config user.name` y `git config user.email` en el proyecto. En el
+computador inicial Git usa el correo flynixglow@gmail.com, configurado solo
+dentro de este proyecto.
 
 **Ubicación en el computador inicial:** `C:\Proyectos\mis-ventas`. Está fuera
 de OneDrive a propósito: OneDrive sincroniza mal las miles de dependencias de
