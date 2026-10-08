@@ -5,7 +5,7 @@
 > negocio, las decisiones tomadas y el estado actual.
 
 **Última actualización:** 2026-10-07
-**Versión:** 0.4.0 (Etapas 0 a 3 terminadas)
+**Versión:** 0.5.0 (Etapas 0 a 3 y 6 terminadas)
 
 ---
 
@@ -19,7 +19,7 @@
 | 3 | Nuevo pedido, detalle del pedido y abonos | **Terminada** |
 | 4 | Dashboard, filtros y búsqueda | **Siguiente** |
 | 5 | Reportes, detalle de campaña, historial y WhatsApp | Pendiente |
-| 6 | Copia de seguridad, restauración y CSV | Pendiente |
+| 6 | Copia de seguridad, restauración y CSV | **Terminada** (se adelantó) |
 | 7 | Pulido offline, prueba en iPhone, versión 1.0 | Pendiente |
 
 **Funciones implementadas (Etapa 0):**
@@ -89,13 +89,31 @@ el trabajo diario.**
   abono) y `consultas.ts` (`cargarVistas`, `cargarVista`).
 - 21 pruebas de repositorio y 4 flujos nuevos, incluido uno sin conexión.
 
-**Todavía no existe:** filtros y búsqueda en Pedidos, dashboard completo,
-reportes, detalle de campaña, historial, WhatsApp, copia de seguridad y CSV.
-La lógica de todo eso ya está en el dominio; faltan las pantallas.
+**Funciones implementadas (Etapa 6, adelantada): copia de seguridad.**
 
-**IMPORTANTE mientras no exista la copia de seguridad (Etapa 6):** los datos
-viven solo en el navegador donde se use la app. No conviene cargar datos
-reales del negocio hasta tener la exportación.
+Se adelantó a las etapas 4 y 5 por decisión del 2026-10-08: poder respaldar
+los datos era lo más urgente antes de usar la app con datos reales.
+
+- **Más → Copia de seguridad:** exportar copia completa, restaurar copia y
+  exportar CSV. Muestra hace cuánto fue la última copia.
+- **Restaurar** valida el archivo completo, muestra una tabla "En la copia /
+  Ahora aquí" y solo reemplaza tras confirmar. Un archivo inválido no toca
+  nada y explica el problema.
+- **Inicio** avisa cuando hay pedidos y no se ha hecho copia en 7 días.
+- Código en `src/datos/respaldo`: `copia.ts` (formato y `validarCopia`, sin
+  acceso a la base), `respaldo.ts` (`crearCopia`, `restaurarCopia`), `csv.ts`.
+- `src/ui/archivos.ts`: en teléfonos usa el menú Compartir; en computador,
+  descarga.
+- 17 pruebas de respaldo y 4 flujos, incluido restaurar en una instalación
+  vacía ("otro teléfono").
+
+**Todavía no existe:** filtros y búsqueda en Pedidos, dashboard completo,
+reportes, detalle de campaña, historial y WhatsApp (etapas 4 y 5). La lógica
+de todo eso ya está en el dominio; faltan las pantallas.
+
+**Pendiente crítico: hosting con HTTPS.** Sin él la app no se puede instalar
+en el iPhone. Requiere una cuenta de GitHub o Cloudflare de la persona dueña
+del proyecto (ver sección 13).
 
 **Notas técnicas para quien continúe:**
 
@@ -509,20 +527,51 @@ Un archivo `mis-ventas-AAAA-MM-DD.json`:
 
 Si la copia es inválida en cualquier paso, no se toca nada.
 
+Detalles de la implementación:
+
+- La copia restaurada se "limpia": solo se conservan los campos conocidos.
+- Si el consecutivo de la copia está atrasado, se corrige al mayor número de
+  pedido, para no reutilizar números.
+- Una copia con `formato` mayor que el de la app se rechaza con el mensaje
+  "actualiza la aplicación".
+- Si se cambia la estructura de los datos: subir `VERSION_ESQUEMA` en
+  `db.ts`, subir `FORMATO_COPIA` en `copia.ts` y hacer que `validarCopia`
+  convierta las copias antiguas. Nunca dejar de aceptar copias viejas.
+
 ### CSV
-Exportación de pedidos, productos y abonos, pensada para abrirse en Excel.
+Tres archivos (`pedidos`, `productos`, `abonos`), separados por punto y coma
+y con BOM, para que Excel en español los abra con columnas y tildes correctas.
 
 ### Cómo mover los datos a otro teléfono
-> Se completará con capturas y pasos exactos cuando se implemente la Etapa 6.
 
-1. En el teléfono viejo: Más → Copia de seguridad → Exportar copia completa.
-2. Guardar el archivo en Archivos / iCloud / Google Drive, o enviarlo por
-   WhatsApp o correo a uno mismo.
-3. En el teléfono nuevo: instalar Mis Ventas (sección 13).
-4. Más → Copia de seguridad → Restaurar copia → elegir el archivo.
-5. Revisar el resumen y confirmar.
+**En el teléfono actual**
 
-Los datos **no** viajan con Git ni con el código: solo con este archivo.
+1. Abrir Mis Ventas → **Más** → **Copia de seguridad**.
+2. Tocar **Exportar copia completa**. Se abre el menú Compartir.
+3. Elegir dónde guardar el archivo `mis-ventas-AAAA-MM-DD.json`:
+   - iPhone: **Guardar en Archivos** → iCloud Drive.
+   - Android: **Drive** o **Guardar**.
+   - O enviarlo a uno mismo por WhatsApp o correo.
+
+**En el teléfono nuevo**
+
+4. Instalar Mis Ventas (sección 13).
+5. Tener el archivo a mano: en iCloud/Drive, o descargarlo del WhatsApp o
+   correo a Archivos.
+6. Abrir Mis Ventas → **Más** → **Copia de seguridad** → **Restaurar copia**.
+7. Elegir el archivo. La app muestra cuántos clientes, pedidos y abonos trae
+   y cuánto hay por cobrar.
+8. Tocar **Restaurar**. Listo: mismos pedidos, mismos saldos, y la numeración
+   continúa donde iba.
+
+**Importante**
+
+- Los datos **no** viajan con Git ni con el código: solo con este archivo.
+- Desinstalar la app o borrar los datos de Safari/Chrome **borra los datos**.
+  Antes de hacerlo, exportar una copia.
+- Hacer una copia cada semana; Inicio lo recuerda a los 7 días.
+- El archivo contiene nombres, teléfonos y ventas: guardarlo en un lugar
+  privado.
 
 ---
 

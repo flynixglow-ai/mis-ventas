@@ -2,6 +2,20 @@
 
 Todos los cambios importantes del proyecto se registran aquí.
 
+## [0.5.0] — 2026-10-08 — Etapa 6 (adelantada): copia de seguridad
+
+### Agregado
+- Exportar copia completa en un archivo JSON.
+- Restaurar copia: validación de formato, registros y relaciones; resumen
+  "En la copia / Ahora aquí"; confirmación; reemplazo en una sola transacción.
+- Exportar CSV de pedidos, productos y abonos para Excel.
+- Aviso en Inicio cuando hay pedidos y no hay copia en los últimos 7 días.
+- Guía de cambio de teléfono en la pantalla y en `CONTEXTO_PROYECTO.md`.
+- 17 pruebas de respaldo y 4 pruebas de flujos.
+
+### Notas
+- Se adelantó a las etapas 4 y 5 para poder usar la app con datos reales.
+
 ## [0.4.0] — 2026-10-07 — Etapa 3: pedidos y abonos
 
 ### Agregado

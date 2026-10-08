@@ -10,12 +10,14 @@ import { DetalleCliente } from '../pantallas/DetalleCliente'
 import { Mas, SECCIONES_MAS } from '../pantallas/Mas'
 import { Marcas } from '../pantallas/Marcas'
 import { Campanas } from '../pantallas/Campanas'
+import { CopiaSeguridad } from '../pantallas/CopiaSeguridad'
 import { EnConstruccion } from '../pantallas/EnConstruccion'
 
 // Secciones de "Más" ya construidas; el resto muestra "Próximamente".
 const LISTAS: Record<string, ReactNode> = {
   marcas: <Marcas />,
   campanas: <Campanas />,
+  copia: <CopiaSeguridad />,
 }
 
 export function App() {

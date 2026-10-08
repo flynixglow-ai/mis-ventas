@@ -22,6 +22,11 @@ export function formatearNumeroPedido(numero: number): string {
   return `#${String(numero).padStart(4, '0')}`
 }
 
+/** contar(1, 'cliente', 'clientes') → "1 cliente" */
+export function contar(cantidad: number, uno: string, varios: string): string {
+  return `${cantidad} ${cantidad === 1 ? uno : varios}`
+}
+
 /** Minúsculas, sin tildes y sin espacios sobrantes: para comparar y buscar. */
 export function normalizar(texto: string): string {
   return texto
