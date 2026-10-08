@@ -2,6 +2,25 @@
 
 Todos los cambios importantes del proyecto se registran aquí.
 
+## [0.3.0] — 2026-10-07 — Etapa 2: marcas, campañas y clientes
+
+### Agregado
+- Pantalla Marcas: crear, editar, activar o desactivar y eliminar.
+- Pantalla Campañas: agrupadas por marca, con fechas y notas opcionales.
+- Pestaña Clientes: lista, búsqueda, detalle, edición, archivar, reactivar y
+  eliminar (solo clientes sin pedidos).
+- Repositorios de marcas, campañas y clientes sobre IndexedDB.
+- Componentes de interfaz: hoja inferior, confirmación, campos, listas.
+- 16 pruebas de repositorios y 4 pruebas de flujos.
+
+### Cambiado
+- Las secciones de "Más" pasan a rutas `/mas/...` y conservan la barra
+  inferior.
+
+### Corregido
+- El formulario de cliente no guardaba al crear desde la pestaña Clientes
+  (detectado por las pruebas de flujos antes de cerrar la etapa).
+
 ## [0.2.0] — 2026-10-07 — Etapa 1: dominio
 
 ### Agregado

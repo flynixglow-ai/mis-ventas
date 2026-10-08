@@ -5,7 +5,7 @@
 > negocio, las decisiones tomadas y el estado actual.
 
 **Última actualización:** 2026-10-07
-**Versión:** 0.2.0 (Etapas 0 y 1 terminadas)
+**Versión:** 0.3.0 (Etapas 0, 1 y 2 terminadas)
 
 ---
 
@@ -15,8 +15,8 @@
 |---|---|---|
 | 0 | Proyecto base, documentación, tema visual, base de datos, PWA mínima | **Terminada** |
 | 1 | Dominio completo con pruebas (sin pantallas) | **Terminada** |
-| 2 | Marcas, campañas y clientes | **Siguiente** |
-| 3 | Nuevo pedido, detalle del pedido y abonos | Pendiente |
+| 2 | Marcas, campañas y clientes | **Terminada** |
+| 3 | Nuevo pedido, detalle del pedido y abonos | **Siguiente** |
 | 4 | Dashboard, filtros y búsqueda | Pendiente |
 | 5 | Reportes, detalle de campaña, historial y WhatsApp | Pendiente |
 | 6 | Copia de seguridad, restauración y CSV | Pendiente |
@@ -51,9 +51,37 @@
 72 pruebas de dominio en verde. El escenario compartido por las pruebas está
 en `src/dominio/datosDePrueba.ts` (4 pedidos, 2 clientes, 2 marcas).
 
-**Todavía no existe:** repositorios (guardar y leer), formularios ni pantallas
-con datos. Nada de la Etapa 1 es visible aún en la app. Eso empieza en la
-Etapa 2.
+**Funciones implementadas (Etapa 2): marcas, campañas y clientes.**
+
+- **Marcas** (Más → Marcas): crear, renombrar, activar o desactivar, eliminar.
+- **Campañas** (Más → Campañas): agrupadas por marca; crear con fechas y
+  notas opcionales, editar, eliminar. La marca no cambia después de creada.
+- **Clientes** (pestaña Clientes): crear, buscar por nombre o teléfono,
+  detalle, editar, archivar, reactivar y eliminar (solo sin pedidos). La
+  pestaña "Archivados" aparece únicamente cuando hay alguno.
+- Repositorios en `src/datos/repositorios` (`marcas`, `campanas`, `clientes`):
+  aplican las validaciones del dominio y lanzan `ErrorDeNegocio` con los
+  mensajes para la interfaz.
+- Componentes reutilizables en `src/ui`: `Boton`, `Campo`, `Interruptor`,
+  `Insignia`, `Hoja` (hoja inferior), `Confirmar`, `Lista`, `Fila`,
+  `useEnvio`.
+- 16 pruebas de repositorios y 4 flujos nuevos en Playwright.
+
+**Todavía no existe:** pedidos, productos ni abonos en la app. El detalle del
+cliente muestra "Sin pedidos" fijo y las listas no muestran saldos. Inicio y
+Pedidos siguen siendo marcadores. Eso es la Etapa 3.
+
+**Notas técnicas para quien continúe:**
+
+- Las rutas de "Más" son `/mas/marcas`, `/mas/campanas`, etc., para que la
+  pestaña Más quede resaltada. En `App.tsx`, el objeto `LISTAS` indica qué
+  secciones ya están construidas; las demás muestran "Próximamente".
+- `Hoja` y `Confirmar` usan un portal a `document.body`: las animaciones
+  aplican `transform` y eso confinaría un `position: fixed`.
+- Las funciones de los repositorios aceptan la base de datos como último
+  parámetro opcional; las pruebas pasan una base temporal.
+- Cuidado con `funcion?.(await algo())`: si `funcion` no existe, `algo()`
+  no se ejecuta. Causó un error real en el formulario de cliente.
 
 **Pendientes fuera del código:**
 
@@ -327,6 +355,8 @@ pedido. Eliminar un pedido no devuelve su número. Se muestra como `#0001`.
   pedidos. Un cliente archivado conserva pedidos y abonos, sigue contando en
   los totales y no aparece al crear pedidos. Se avisa si se archiva con saldo.
 - **Marca y campaña:** no se eliminan si tienen pedidos. La marca se desactiva.
+  Al eliminar una marca sin pedidos se eliminan también sus campañas (la
+  confirmación lo avisa).
 - **Pedido, producto y abono:** se eliminan con confirmación. Si el pedido
   tiene abonos, la advertencia indica cuántos y por cuánto valor.
 - Eliminar un producto de un pedido pasa por la misma validación de edición.

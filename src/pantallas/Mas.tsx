@@ -17,7 +17,7 @@ export function Mas() {
       <ul className="overflow-hidden rounded-tarjeta border border-borde bg-superficie">
         {SECCIONES_MAS.map((s, i) => (
           <li key={s.ruta} className={i > 0 ? 'border-t border-borde' : ''}>
-            <Link to={`/${s.ruta}`} className="flex min-h-16 items-center gap-3 px-5 py-3 active:bg-superficie-2">
+            <Link to={`/mas/${s.ruta}`} className="flex min-h-16 items-center gap-3 px-5 py-3 active:bg-superficie-2">
               <span className="flex-1">
                 <span className="block font-semibold">{s.titulo}</span>
                 <span className="block text-sm text-tenue">{s.detalle}</span>

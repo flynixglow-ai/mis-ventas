@@ -52,6 +52,19 @@ export const IconoSumar = () => (
   </Icono>
 )
 
+export const IconoCerrar = () => (
+  <Icono>
+    <path d="M6 6l12 12M18 6 6 18" />
+  </Icono>
+)
+
+export const IconoBuscar = () => (
+  <Icono tamano={20}>
+    <circle cx="11" cy="11" r="6.5" />
+    <path d="m16 16 4 4" />
+  </Icono>
+)
+
 export const IconoAtras = () => (
   <Icono>
     <path d="m15 5-7 7 7 7" />
