@@ -55,6 +55,8 @@ export interface Pedido {
 export interface Item {
   id: Id
   pedidoId: Id
+  /** Posición dentro del pedido: los productos se muestran como se escribieron. */
+  orden: number
   nombre: string
   cantidad: number
   valorUnitario: number
@@ -66,6 +68,13 @@ export interface Item {
 
 export const METODOS_PAGO = ['efectivo', 'nequi', 'transferencia', 'otro'] as const
 export type MetodoPago = (typeof METODOS_PAGO)[number]
+
+export const ETIQUETA_METODO: Record<MetodoPago, string> = {
+  efectivo: 'Efectivo',
+  nequi: 'Nequi',
+  transferencia: 'Transferencia',
+  otro: 'Otro',
+}
 
 export interface Abono {
   id: Id

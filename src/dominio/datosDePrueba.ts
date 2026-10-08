@@ -37,7 +37,8 @@ export const carlos = cliente('carlos', 'Carlos Gómez', '')
 let secuencia = 0
 
 export function item(pedidoId: string, nombre: string, cantidad: number, valorUnitario: number): Item {
-  return { id: `i${++secuencia}`, pedidoId, nombre, cantidad, valorUnitario }
+  const orden = ++secuencia
+  return { id: `i${orden}`, pedidoId, orden, nombre, cantidad, valorUnitario }
 }
 
 export function abono(pedidoId: string, valor: number, fecha: string, metodo: MetodoPago = 'efectivo'): Abono {

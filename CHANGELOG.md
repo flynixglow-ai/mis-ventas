@@ -2,6 +2,28 @@
 
 Todos los cambios importantes del proyecto se registran aquí.
 
+## [0.4.0] — 2026-10-07 — Etapa 3: pedidos y abonos
+
+### Agregado
+- Nuevo pedido con varios productos, total automático y abono inicial con
+  método de pago; selección o creación de cliente sin salir del formulario.
+- Detalle del pedido con saldo, estado, productos e historial de abonos.
+- Registrar abono (con atajo "Pagar todo") y eliminar abono.
+- Editar y eliminar pedido, con advertencia cuando tiene abonos.
+- Número de pedido consecutivo que no se reutiliza.
+- Lista de pedidos; saldos en la lista y el detalle de clientes; total por
+  cobrar en Inicio.
+- Campo `orden` en los productos del pedido.
+- 21 pruebas de repositorio y 4 pruebas de flujos (una sin conexión).
+
+### Cambiado
+- El botón Volver regresa a la pantalla anterior.
+
+### Corregido
+- Los productos de un pedido no conservaban el orden en que se escribieron.
+- No se podía guardar un pedido con la fecha límite vacía.
+  (Ambos detectados por las pruebas antes de cerrar la etapa.)
+
 ## [0.3.0] — 2026-10-07 — Etapa 2: marcas, campañas y clientes
 
 ### Agregado

@@ -5,7 +5,7 @@
 > negocio, las decisiones tomadas y el estado actual.
 
 **Última actualización:** 2026-10-07
-**Versión:** 0.3.0 (Etapas 0, 1 y 2 terminadas)
+**Versión:** 0.4.0 (Etapas 0 a 3 terminadas)
 
 ---
 
@@ -16,8 +16,8 @@
 | 0 | Proyecto base, documentación, tema visual, base de datos, PWA mínima | **Terminada** |
 | 1 | Dominio completo con pruebas (sin pantallas) | **Terminada** |
 | 2 | Marcas, campañas y clientes | **Terminada** |
-| 3 | Nuevo pedido, detalle del pedido y abonos | **Siguiente** |
-| 4 | Dashboard, filtros y búsqueda | Pendiente |
+| 3 | Nuevo pedido, detalle del pedido y abonos | **Terminada** |
+| 4 | Dashboard, filtros y búsqueda | **Siguiente** |
 | 5 | Reportes, detalle de campaña, historial y WhatsApp | Pendiente |
 | 6 | Copia de seguridad, restauración y CSV | Pendiente |
 | 7 | Pulido offline, prueba en iPhone, versión 1.0 | Pendiente |
@@ -67,9 +67,35 @@ en `src/dominio/datosDePrueba.ts` (4 pedidos, 2 clientes, 2 marcas).
   `useEnvio`.
 - 16 pruebas de repositorios y 4 flujos nuevos en Playwright.
 
-**Todavía no existe:** pedidos, productos ni abonos en la app. El detalle del
-cliente muestra "Sin pedidos" fijo y las listas no muestran saldos. Inicio y
-Pedidos siguen siendo marcadores. Eso es la Etapa 3.
+**Funciones implementadas (Etapa 3): pedidos y abonos. La app ya sirve para
+el trabajo diario.**
+
+- **Nuevo pedido** (botón ＋): cliente (buscar o crear sin salir), marca,
+  campaña de esa marca, varios productos con subtotal, abono inicial con
+  método de pago, fecha de venta, fecha límite y notas. Pie fijo con Total /
+  Abono / Saldo. Propone la marca y campaña del último pedido.
+- **Detalle del pedido:** saldo, total, abonado, estado, datos, productos,
+  historial de abonos, editar y eliminar.
+- **Registrar abono:** valor, atajo "Pagar todo", método, fecha y nota.
+- **Editar pedido:** mismos campos; el total no puede bajar de lo abonado.
+- **Eliminar** pedido, producto y abono con confirmación; si el pedido tiene
+  abonos, la advertencia dice cuántos y por cuánto.
+- **Pestaña Pedidos:** lista simple de todos los pedidos (sin filtros aún).
+- **Clientes:** la lista muestra comprado, pagado y saldo; el detalle muestra
+  sus pedidos, totales y un botón de nuevo pedido para ese cliente.
+- **Inicio:** muestra el total por cobrar real (el resto del dashboard es de
+  la Etapa 4).
+- Repositorios `pedidos.ts` (crear, editar, eliminar, registrar y eliminar
+  abono) y `consultas.ts` (`cargarVistas`, `cargarVista`).
+- 21 pruebas de repositorio y 4 flujos nuevos, incluido uno sin conexión.
+
+**Todavía no existe:** filtros y búsqueda en Pedidos, dashboard completo,
+reportes, detalle de campaña, historial, WhatsApp, copia de seguridad y CSV.
+La lógica de todo eso ya está en el dominio; faltan las pantallas.
+
+**IMPORTANTE mientras no exista la copia de seguridad (Etapa 6):** los datos
+viven solo en el navegador donde se use la app. No conviene cargar datos
+reales del negocio hasta tener la exportación.
 
 **Notas técnicas para quien continúe:**
 
@@ -82,6 +108,17 @@ Pedidos siguen siendo marcadores. Eso es la Etapa 3.
   parámetro opcional; las pruebas pasan una base temporal.
 - Cuidado con `funcion?.(await algo())`: si `funcion` no existe, `algo()`
   no se ejecuta. Causó un error real en el formulario de cliente.
+- Los formularios envían los campos opcionales vacíos como `''`. Los
+  repositorios los convierten a `undefined` (`opcional()`) **antes** de
+  validar; no hacerlo impedía guardar pedidos sin fecha límite.
+- Los eventos de React suben por los portales: `Hoja` detiene el `submit`
+  para que un formulario dentro de una hoja no envíe el de la pantalla.
+- El botón Volver regresa a la pantalla anterior del historial
+  (`useVolver`); la ruta `volverA` solo se usa si la app se abrió directamente
+  en esa pantalla.
+- El formulario de pedido (`FormularioPedido.tsx`) exporta `NuevoPedido` y
+  `EditarPedido`; ocupa toda la pantalla, sin barra inferior.
+- `/pedidos/nuevo?cliente=<id>` abre el formulario con ese cliente elegido.
 
 **Pendientes fuera del código:**
 
@@ -275,6 +312,7 @@ de creación son ISO completas.
 |---|---|---|
 | id | texto | |
 | pedidoId | texto | |
+| orden | entero | Posición dentro del pedido |
 | nombre | texto | Obligatorio |
 | cantidad | entero | Mayor que 0 |
 | valorUnitario | entero | 0 o más |
@@ -349,6 +387,14 @@ pedido. Eliminar un pedido no devuelve su número. Se muestra como `#0001`.
   total abonado. Aumentar el total siempre se permite.
 - Fechas: deben ser fechas reales; la fecha límite no puede ser anterior a la
   fecha de venta.
+
+### Abonos y edición
+- El abono inicial se guarda con la fecha de la venta.
+- Un abono no se edita: se elimina y se registra de nuevo.
+- Al editar un pedido se reemplazan sus productos; número, abonos y fecha de
+  creación se conservan.
+- Un pedido antiguo de un cliente archivado se puede corregir, pero no se
+  puede crear un pedido nuevo para un cliente archivado.
 
 ### Eliminar y archivar
 - **Cliente:** se archiva, no se elimina. Solo puede eliminarse un cliente sin

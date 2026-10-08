@@ -3,7 +3,8 @@ import { Navigate, Route, Routes } from 'react-router-dom'
 import { ConBarra } from './ConBarra'
 import { Inicio } from '../pantallas/Inicio'
 import { Pedidos } from '../pantallas/Pedidos'
-import { NuevoPedido } from '../pantallas/NuevoPedido'
+import { EditarPedido, NuevoPedido } from '../pantallas/FormularioPedido'
+import { DetallePedido } from '../pantallas/DetallePedido'
 import { Clientes } from '../pantallas/Clientes'
 import { DetalleCliente } from '../pantallas/DetalleCliente'
 import { Mas, SECCIONES_MAS } from '../pantallas/Mas'
@@ -24,6 +25,7 @@ export function App() {
         <Route element={<ConBarra />}>
           <Route index element={<Inicio />} />
           <Route path="pedidos" element={<Pedidos />} />
+          <Route path="pedidos/:id" element={<DetallePedido />} />
           <Route path="clientes" element={<Clientes />} />
           <Route path="clientes/:id" element={<DetalleCliente />} />
           <Route path="mas" element={<Mas />} />
@@ -35,14 +37,9 @@ export function App() {
             />
           ))}
         </Route>
-        <Route
-          path="pedidos/nuevo"
-          element={
-            <div className="h-full overflow-y-auto">
-              <NuevoPedido />
-            </div>
-          }
-        />
+        {/* El formulario de pedido ocupa toda la pantalla, con su propio pie fijo. */}
+        <Route path="pedidos/nuevo" element={<NuevoPedido />} />
+        <Route path="pedidos/:id/editar" element={<EditarPedido />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </div>

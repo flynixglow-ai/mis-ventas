@@ -1,10 +1,11 @@
 import type { ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 import { IconoAdelante, IconoAtras } from './iconos'
+import { useVolver } from './useVolver'
 
 interface Props {
   titulo: string
-  /** Si se indica, muestra el botón de volver hacia esa ruta. */
+  /** Si se indica, muestra el botón de volver; la ruta se usa si no hay pantalla anterior. */
   volverA?: string
   /** Botón de acción a la derecha del título. */
   accion?: ReactNode
@@ -12,17 +13,19 @@ interface Props {
 }
 
 export function Pantalla({ titulo, volverA, accion, children }: Props) {
+  const volver = useVolver(volverA ?? '/')
   return (
     <div className="animate-entrar px-5 pb-10 pt-[calc(env(safe-area-inset-top)+1rem)]">
       <header className="mb-5 flex min-h-11 items-center gap-2">
         {volverA && (
-          <Link
-            to={volverA}
+          <button
+            type="button"
+            onClick={volver}
             aria-label="Volver"
             className="-ml-2 flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-tenue active:bg-superficie"
           >
             <IconoAtras />
-          </Link>
+          </button>
         )}
         <h1 className="min-w-0 flex-1 truncate text-[28px] font-bold tracking-tight">{titulo}</h1>
         {accion}

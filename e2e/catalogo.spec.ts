@@ -157,7 +157,7 @@ test('clientes: crear, buscar, editar, archivar, reactivar y eliminar', async ({
   await page.getByRole('alertdialog').getByRole('button', { name: 'Archivar' }).click()
   await expect(page.getByText('Archivado', { exact: true })).toBeVisible()
 
-  await page.getByRole('link', { name: 'Volver' }).click()
+  await page.getByRole('button', { name: 'Volver', exact: true }).click()
   await expect(lista).toHaveText([/Carlos Gómez/])
   await page.getByRole('tab', { name: 'Archivados (1)' }).click()
   await expect(lista).toHaveText([/María López/])

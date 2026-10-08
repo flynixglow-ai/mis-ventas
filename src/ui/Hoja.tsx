@@ -19,7 +19,9 @@ export function Hoja({ titulo, alCerrar, children }: PropsHoja) {
 
   // Portal: un ancestro con transform (las animaciones) confinaría el position: fixed.
   return createPortal(
-    <div className="fixed inset-0 z-40 flex items-end justify-center">
+    // Los eventos de React suben por el portal: un formulario dentro de la hoja
+    // no debe disparar el envío del formulario de la pantalla que la abrió.
+    <div className="fixed inset-0 z-40 flex items-end justify-center" onSubmit={(e) => e.stopPropagation()}>
       <div className="absolute inset-0 animate-aparecer bg-black/60" onClick={alCerrar} />
       <div
         role="dialog"

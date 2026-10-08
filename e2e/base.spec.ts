@@ -22,7 +22,7 @@ test('el botón ＋ abre Nuevo pedido y se puede volver', async ({ page }) => {
   await page.goto('/')
   await page.getByRole('link', { name: 'Nuevo pedido' }).click()
   await expect(page.getByRole('heading', { name: 'Nuevo pedido' })).toBeVisible()
-  await page.getByRole('link', { name: 'Volver' }).click()
+  await page.getByRole('button', { name: 'Volver' }).click()
   await expect(page.getByRole('heading', { name: 'Mis Ventas' })).toBeVisible()
 })
 

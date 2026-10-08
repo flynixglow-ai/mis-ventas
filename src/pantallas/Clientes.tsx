@@ -1,7 +1,11 @@
 import { useState } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { db } from '../datos/db'
+import { cargarVistas } from '../datos/repositorios/consultas'
 import { coincideCliente } from '../dominio/busqueda'
+import { formatearPesos } from '../dominio/formato'
+import { agrupar } from '../dominio/reportes'
+import { Insignia } from '../ui/Campo'
 import type { EstadoCliente } from '../dominio/tipos'
 import { Boton } from '../ui/Boton'
 import { EstadoVacio, Fila, Lista, Pantalla } from '../ui/Pantalla'
@@ -13,6 +17,7 @@ export function Clientes() {
   const [estado, setEstado] = useState<EstadoCliente>('activo')
   const [creando, setCreando] = useState(false)
   const todos = useLiveQuery(() => db.clientes.orderBy('nombre').toArray(), [])
+  const totales = useLiveQuery(async () => agrupar(await cargarVistas(), (v) => v.pedido.clienteId), [])
 
   const archivados = todos?.filter((c) => c.estado === 'archivado').length ?? 0
   // Si se reactiva el último archivado, la vista vuelve sola a los activos.
@@ -71,9 +76,30 @@ export function Clientes() {
       )}
       {visibles && visibles.length > 0 && (
         <Lista etiqueta="Clientes">
-          {visibles.map((c) => (
-            <Fila key={c.id} titulo={c.nombre} detalle={c.telefono || 'Sin teléfono'} a={`/clientes/${c.id}`} inicial />
-          ))}
+          {visibles.map((c) => {
+            const t = totales?.get(c.id)
+            return (
+              <Fila
+                key={c.id}
+                titulo={c.nombre}
+                detalle={
+                  t
+                    ? `Compró ${formatearPesos(t.vendido)} · Pagó ${formatearPesos(t.cobrado)}`
+                    : c.telefono || 'Sin pedidos'
+                }
+                extra={
+                  t &&
+                  (t.pendiente > 0 ? (
+                    <span className="shrink-0 font-semibold text-aviso">{formatearPesos(t.pendiente)}</span>
+                  ) : (
+                    <Insignia tono="exito">Al día</Insignia>
+                  ))
+                }
+                a={`/clientes/${c.id}`}
+                inicial
+              />
+            )
+          })}
         </Lista>
       )}
       {creando && <FormularioCliente alCerrar={() => setCreando(false)} />}
